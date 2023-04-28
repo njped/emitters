@@ -4,44 +4,6 @@ const file = fs.createWriteStream('./plantGame.txt')
 process.stdin.setEncoding('utf-8')
 let count = 1
 
-console.log('Welcome to the Plant Game')
-console.log('Commands: plant seed, water, bug attack, harvest quit')
-
-process.stdin.on('readable', () => {
-  let userInput;
-  while ((userInput = process.stdin.read()) !== null) {
-    process.stdout.write(`Your Data: ${userInput}`)
-    file.write(`${count}: ${userInput}`)
-    count++
-    if(userInput === 'plant seed') {
-      myPlant.emit('plantSeed')
-    }
-    else if(userInput === 'water') {
-      myPlant.emit('water')
-      
-    }
-    else if(userInput === 'bug attack') {
-      myPlant.emit('bugAttack')
-      
-    }
-    else if(userInput === 'harvest') {
-      myPlant.emit('harvest')
-    }
-    else {
-      myPlant.emit('error')
-      console.log('Please type one of the commands to continue\n')
-      console.log('plant seed, water, bug attack, harvest quit')
-    }
-  }
-})
-
-process.stdin.on('quit', () => {
-  process.stdout.write("Thanks for playing\n")
-})
-process.stdin.on('close', () => {
-  process.stdout.write('terminal signing out\n')
-})
-
 class Plant extends EventEmiiter {
   constructor(size) {
     super();
@@ -81,10 +43,48 @@ class Plant extends EventEmiiter {
     })
     
     this.on('error', () => {
-      console.log('Error Occured')
+      console.log('Error Occured\n')
     })
   }
   
 }
 
 const myPlant = new Plant(1)
+
+console.log('Welcome to the Plant Game')
+console.log('Commands: plant seed, water, bug attack, harvest quit')
+
+process.stdin.on('readable', () => {
+  let userInput;
+  while ((userInput = process.stdin.read()) !== null) {
+    process.stdout.write(`Your Data: ${userInput}`)
+    file.write(`${count}: ${userInput}`)
+    count++
+    if(userInput === 'plant seed') {
+      myPlant.emit('plantSeed')
+    }
+    else if(userInput === 'water') {
+      myPlant.emit('water')
+      
+    }
+    else if(userInput === 'bug attack') {
+      myPlant.emit('bugAttack')
+      
+    }
+    else if(userInput === 'harvest') {
+      myPlant.emit('harvest')
+    }
+    else {
+      myPlant.emit('error')
+      console.log('Please type one of the commands to continue:')
+      console.log('plant seed, water, bug attack, harvest quit')
+    }
+  }
+})
+
+process.stdin.on('quit', () => {
+  process.stdout.write("Thanks for playing\n")
+})
+process.stdin.on('close', () => {
+  process.stdout.write('terminal signing out\n')
+})

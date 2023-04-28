@@ -3,12 +3,12 @@ const fs = require('fs')
 const file = fs.createWriteStream('./plantGame.txt')
 process.stdin.setEncoding('utf-8')
 let count = 1
-const myPlant = new Plant(1)
+
+console.log('Welcome to the Plant Game')
+console.log('Commands: plant seed, water, bug attack, harvest quit')
 
 process.stdin.on('readable', () => {
   let userInput;
-  console.log('Welcome to the Plant Game')
-  console.log('Commands: plant seed, water, bug attack, harvest quit')
   while ((userInput = process.stdin.read()) !== null) {
     process.stdout.write(`Your Data: ${userInput}`)
     file.write(`${count}: ${userInput}`)
@@ -28,13 +28,9 @@ process.stdin.on('readable', () => {
       myPlant.emit('harvest')
     }
     else {
-      myPlant.error('error')
+      myPlant.emit('error')
       console.log('Please type one of the commands to continue\n')
       console.log('plant seed, water, bug attack, harvest quit')
-    }
-
-    if(userInput.trim() === 'exit'){
-      break;
     }
   }
 })
@@ -51,7 +47,7 @@ class Plant extends EventEmiiter {
     super();
     this.size = size;
     this.isPlanted = false
-
+    
     this.once('plantSeed', () => {
       this.isPlanted = true
       console.log('You have planted the seed. Start nurturing it')
@@ -83,7 +79,7 @@ class Plant extends EventEmiiter {
         console.log("The seed hasn't been planted yet")
       }
     })
-
+    
     this.on('error', () => {
       console.log('Error Occured')
     })
@@ -91,3 +87,4 @@ class Plant extends EventEmiiter {
   
 }
 
+const myPlant = new Plant(1)
